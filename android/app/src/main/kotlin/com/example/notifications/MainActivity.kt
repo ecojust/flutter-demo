@@ -1,4 +1,4 @@
-package com.example.flutter_githubaction
+package com.example.notifications
 
 import io.flutter.embedding.android.FlutterActivity
 

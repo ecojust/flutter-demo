@@ -2,7 +2,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_githubaction/services/notification_service.dart';
+import 'package:notifications/services/notification_service.dart';
 
 class FcmService {
   static final AwesomeNotificationsFcm _fcmPlugin = AwesomeNotificationsFcm();
