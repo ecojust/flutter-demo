@@ -1,6 +1,6 @@
 name: notifications
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -9,9 +9,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # Awesome plugins for local notifications
+
   awesome_notifications_core: ^0.10.0 # use the latest core version available
-  awesome_notifications: ^0.10.0 # This version is managed by core plugin
+  awesome_notifications_fcm: ^latest_version
+  firebase_core: ^latest_version
 
 dev_dependencies:
   flutter_test:
