@@ -12,7 +12,7 @@ permissions:
   actions: read # allow pulling marketplace actions
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: release-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -55,12 +55,24 @@ jobs:
           mkdir -p artifacts
           cp build/app/outputs/flutter-apk/*.apk artifacts/
 
+      - name: ⏰ Get date and run number
+        id: date_run
+        shell: bash
+        run: |
+          echo "date=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
+          echo "number=${{ github.run_number }}" >> $GITHUB_OUTPUT
+          # 修改为符合semver的版本格式：主版本.次版本.修订版本
+          echo "bundle_version=-${{ github.run_number }}" >> $GITHUB_OUTPUT
+          # 获取最近一次提交的信息
+          echo "commit_message=$(git log -1 --pretty=%B | head -n 1)" >> $GITHUB_OUTPUT
+          # 获取短版本的commit SHA
+          echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       # ─────────────── ONLY ON TAGS ───────────────
       - name: 🏷️ Create or update Release
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: ncipollo/release-action@v1.16.0
         with:
-          tag: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag: "0.0.1-${{ steps.date_run.outputs.date }}-${{ steps.date_run.outputs.number }}"
+          name: Release 0.0.1-${{ steps.date_run.outputs.date }}-${{ steps.date_run.outputs.number }}
           artifacts: artifacts/*.apk
           token: ${{ secrets.GITHUB_TOKEN }}
