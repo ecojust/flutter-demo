@@ -1,29 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // 初始化通知插件
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  final DarwinInitializationSettings initializationSettingsIOS =
-      DarwinInitializationSettings();
-  final InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  
-  runApp(MyApp(notificationsPlugin: flutterLocalNotificationsPlugin));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final FlutterLocalNotificationsPlugin notificationsPlugin;
-  
-  const MyApp({Key? key, required this.notificationsPlugin}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +17,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(
+      home: const MyHomePage(
         title: '功能演示应用',
-        notificationsPlugin: notificationsPlugin,
       ),
     );
   }
@@ -44,11 +28,9 @@ class MyHomePage extends StatefulWidget {
   const MyHomePage({
     Key? key,
     required this.title,
-    required this.notificationsPlugin,
   }) : super(key: key);
 
   final String title;
-  final FlutterLocalNotificationsPlugin notificationsPlugin;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -120,35 +102,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // 发送系统通知
-  Future<void> _showNotification() async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your_channel_id',
-      'your_channel_name',
-      channelDescription: 'your_channel_description',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    const DarwinNotificationDetails iOSPlatformChannelSpecifics =
-        DarwinNotificationDetails();
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
-    );
-    
-    await widget.notificationsPlugin.show(
-      0,
-      '系统通知',
-      '这是一条来自Flutter应用的系统通知',
-      platformChannelSpecifics,
-    );
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('通知已发送')),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,14 +118,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
               ),
               child: const Text('人脸识别', style: TextStyle(fontSize: 18)),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _showNotification,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-              ),
-              child: const Text('系统通知', style: TextStyle(fontSize: 18)),
             ),
           ],
         ),
