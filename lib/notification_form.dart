@@ -50,7 +50,30 @@ class _NotificationFormState extends State<NotificationForm> {
           ),
           spacer,
           ElevatedButton(
+            // onPressed: () {
+            //   context.read<NotificationService>().show(
+            //     title: _titleController.text,
+            //     body: _bodyController.text,
+            //     payload: {"text": _payloadController.text},
+            //   );
+            // },
             onPressed: () {
+              
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                    title: const Text("Alert Dialog Box"),
+                    content: const Text("You have raised an Alert Dialog Box"),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          // Navigator.of(ctx).pop();
+                        },
+                        child: const Text("Okay"),
+                      ),
+                    ],
+                ),
+              );
               context.read<NotificationService>().show(
                 title: _titleController.text,
                 body: _bodyController.text,
