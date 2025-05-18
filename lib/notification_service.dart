@@ -89,8 +89,8 @@ class NotificationService {
           payload: payload,
           notificationLayout: NotificationLayout.Default,
           // 添加小图标和大图标
-          smallIcon: 'resource://drawable/ic_notification',  // 小图标
-          largeIcon: 'resource://drawable/app_icon',         // 大图标
+          // smallIcon: 'resource://drawable/app_icon',  // 小图标
+          // largeIcon: 'resource://drawable/app_icon',         // 大图标
         ),
       );
     } catch (e) {
