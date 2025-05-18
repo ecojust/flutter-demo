@@ -16,6 +16,10 @@ class NotificationService {
           channelName: 'Basic notifications',
           channelDescription: 'Notification channel for basic tests',
           defaultColor: brandColor,
+          importance: NotificationImportance.High,
+          playSound: true,
+          enableVibration: true,
+          enableLights: true,
         ),
       ],
       // Channel groups are only visual and are not required
@@ -48,8 +52,16 @@ class NotificationService {
   Future<bool> requestPermission() async {
     bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
     if (!isAllowed) {
-      isAllowed =
-          await AwesomeNotifications().requestPermissionToSendNotifications();
+      isAllowed = await AwesomeNotifications().requestPermissionToSendNotifications(
+        permissions: [
+          NotificationPermission.Alert,
+          NotificationPermission.Sound,
+          NotificationPermission.Badge,
+          NotificationPermission.Vibration,
+          NotificationPermission.Light,
+          NotificationPermission.CriticalAlert,
+        ]
+      );
     }
     return isAllowed;
   }

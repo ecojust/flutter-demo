@@ -50,35 +50,40 @@ class _NotificationFormState extends State<NotificationForm> {
           ),
           spacer,
           ElevatedButton(
-            // onPressed: () {
-            //   context.read<NotificationService>().show(
-            //     title: _titleController.text,
-            //     body: _bodyController.text,
-            //     payload: {"text": _payloadController.text},
-            //   );
-            // },
-            onPressed: () {
+            onPressed: () async {
+              // 先确保有权限
+              bool hasPermission = await context.read<NotificationService>().requestPermission();
               
-              showDialog(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                    title: const Text("Alert Dialog Box"),
-                    content: const Text("You have raised an Alert Dialog Box"),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.of(ctx).pop();
-                        },
-                        child: const Text("Okay"),
-                      ),
-                    ],
-                ),
-              );
-              context.read<NotificationService>().show(
-                title: _titleController.text,
-                body: _bodyController.text,
-                payload: {"text": _payloadController.text},
-              );
+              if (hasPermission) {
+                // 显示对话框
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                      title: const Text("Alert Dialog Box"),
+                      content: const Text("You have raised an Alert Dialog Box"),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          child: const Text("Okay"),
+                        ),
+                      ],
+                  ),
+                );
+                
+                // 发送通知
+                context.read<NotificationService>().show(
+                  title: _titleController.text,
+                  body: _bodyController.text,
+                  payload: {"text": _payloadController.text},
+                );
+              } else {
+                // 提示用户需要权限
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("需要通知权限才能发送通知")),
+                );
+              }
             },
             child: const Text("Show notification"),
           ),
