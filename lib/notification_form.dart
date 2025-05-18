@@ -73,11 +73,17 @@ class _NotificationFormState extends State<NotificationForm> {
                 );
                 
                 // 发送通知
-                context.read<NotificationService>().show(
+                bool success = await context.read<NotificationService>().show(
                   title: _titleController.text,
                   body: _bodyController.text,
                   payload: {"text": _payloadController.text},
                 );
+                
+                if (!success) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("通知发送失败")),
+                  );
+                }
               } else {
                 // 提示用户需要权限
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -23,12 +23,12 @@ class NotificationService {
         ),
       ],
       // Channel groups are only visual and are not required
-      channelGroups: [
-        NotificationChannelGroup(
-          channelGroupKey: 'basic_channel_group',
-          channelGroupName: 'Basic group',
-        ),
-      ],
+      // channelGroups: [
+      //   NotificationChannelGroup(
+      //     channelGroupKey: 'basic_channel_group',
+      //     channelGroupName: 'Basic group',
+      //   ),
+      // ],
       debug: true,
     );
   }
@@ -69,16 +69,33 @@ class NotificationService {
   int _lastId = 0;
 
   /// Create a notification
-  show({String? title, String? body, Map<String, String?>? payload}) {
-    AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: _lastId++,
-        channelKey: 'basic_channel',
-        actionType: ActionType.Default,
-        title: title,
-        body: body,
-        payload: payload,
-      ),
-    );
+  Future<bool> show({String? title, String? body, Map<String, String?>? payload}) async {
+    try {
+      // 确保有权限
+      bool hasPermission = await requestPermission();
+      if (!hasPermission) {
+        print("通知权限未获取，无法显示通知");
+        return false;
+      }
+      
+      // 创建通知
+      return await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: _lastId++,
+          channelKey: 'basic_channel',
+          actionType: ActionType.Default,
+          title: title ?? "默认标题",  // 提供默认值
+          body: body ?? "默认内容",    // 提供默认值
+          payload: payload,
+          notificationLayout: NotificationLayout.Default,
+          // 添加小图标和大图标
+          smallIcon: 'resource://drawable/ic_notification',  // 小图标
+          largeIcon: 'resource://drawable/app_icon',         // 大图标
+        ),
+      );
+    } catch (e) {
+      print("创建通知时出错: $e");
+      return false;
+    }
   }
 }
